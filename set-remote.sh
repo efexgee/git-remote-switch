@@ -24,11 +24,7 @@ if (( $? != 0 )); then
     exit 1
 fi
 
-#echo "$origin_url"
-
 origin_host="$(echo $origin_url | awk -F'[@:]' '{print $2}')"
-
-#echo "$origin_host"
 
 if [[ "$origin_host" != "github.com" ]]; then
     echo "Exiting: origin URL's hostname isn't github.com: $origin_host"
@@ -36,8 +32,6 @@ if [[ "$origin_host" != "github.com" ]]; then
 fi
 
 new_url="$(echo $origin_url | sed 's/github.com/github-'$remote_suffix'/')"
-
-#echo "$new_url"
 
 git remote set-url origin "$new_url"
 

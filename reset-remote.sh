@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This assumes you want to change the hostname in your
+# origin's remote from github.com to an alias you specified
+# in your .ssh/config file of the form "github-something"
+
 remotes="$(git remote -v)"
 
 if (( $? != 0 )); then
@@ -15,11 +19,7 @@ if (( $? != 0 )); then
     exit 1
 fi
 
-#echo "$origin_url"
-
 origin_host="$(echo $origin_url | awk -F'[@:]' '{print $2}')"
-
-#echo "$origin_host"
 
 if [[ "$origin_host" == "github.com" ]]; then
     echo "Exiting: origin URL's hostname is already github.com"
@@ -27,8 +27,6 @@ if [[ "$origin_host" == "github.com" ]]; then
 fi
 
 new_url="$(echo $origin_url | sed 's/@[^:]*:/@github.com:/')"
-
-#echo "$new_url"
 
 git remote set-url origin "$new_url"
 
