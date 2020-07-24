@@ -19,14 +19,15 @@ if (( $? != 0 )); then
     exit 1
 fi
 
-origin_host="$(echo $origin_url | awk -F'[@:]' '{print $2}')"
+# some of my remote URLs are prefixed with 'ssh://' and have no colons
+origin_host="$(echo $origin_url | sed 's/^ssh:\/\///' | awk -F'[@:/]' '{print $2}')"
 
 if [[ "$origin_host" == "github.com" ]]; then
-    echo "Exiting: origin URL's hostname is already github.com"
+    echo "Exiting: origin URL's hostname is already github.com: $origin_url"
     exit 1
 fi
 
-new_url="$(echo $origin_url | sed 's/@[^:]*:/@github.com:/')"
+new_url="$(echo $origin_url | sed "s/$origin_host/github.com/")"
 
 git remote set-url origin "$new_url"
 
